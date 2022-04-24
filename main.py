@@ -22,13 +22,11 @@ st.write(text[:1000])
 
 st.header("Generated Text")
 
-
 model_loc = "./models/" + option
 st.write("Loading ",model_loc, "...")
 model = keras.models.load_model(model_loc)
 
 seed = st.text_input("Seed", "Magic mirror on the wall, who's the fairest of them all?")
-#seed = st.text_input("Seed", "Magic mirror on t")
 
 # GARBAGE
 while len(seed) < 40:
