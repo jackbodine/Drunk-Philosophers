@@ -22,6 +22,7 @@ st.write(text[:1000])
 
 st.header("Generated Text")
 
+
 model_loc = "./models/" + option
 st.write("Loading ",model_loc, "...")
 model = keras.models.load_model(model_loc)
@@ -40,7 +41,6 @@ char_indices = dict((c, i) for i, c in enumerate(chars))
 indices_char = dict((i, c) for i, c in enumerate(chars))
 
 def sample(preds, temperature=1.0):
-    """Helper function to sample an index from a probability array."""
     preds = np.asarray(preds).astype('float64')
     preds = np.exp(np.log(preds) / temperature)  # softmax
     preds = preds / np.sum(preds)                #
