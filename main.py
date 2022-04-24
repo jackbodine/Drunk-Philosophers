@@ -116,7 +116,6 @@ def generate_text(philosopher_name, seed):
 
                 response_text = response_text + next_char
                 i = i + 1
-                print("i:", i)
 
     st.write(response_text)
     return response_text
