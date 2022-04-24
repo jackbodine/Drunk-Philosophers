@@ -31,6 +31,9 @@ seed = st.text_input("Seed", "Magic mirror on the wall, who's the fairest of the
 #seed = st.text_input("Seed", "Magic mirror on t")
 
 # GARBAGE
+while len(seed) < 40:
+    seed = seed + " "
+
 seqlen = 40
 seed = seed[:seqlen]
 
@@ -48,22 +51,25 @@ def sample(preds, temperature=1.0):
     return np.argmax(probas)    
 
 # GARBAGE
-
-bar = st.progress(0)
-
 response_text = option + ": "
-for i in range(response_length):
-        x_pred = np.zeros((1, seqlen, len(chars)))
-        for t, char in enumerate(seed):
-            x_pred[0, t, char_indices[char]] = 1.
+#for i in range(response_length):
+next_char = ""
+i = 0
+with st.spinner('Wait for it...'):
+    while (next_char != '.') and (i < 300):
+            x_pred = np.zeros((1, seqlen, len(chars)))
+            for t, char in enumerate(seed):
+                x_pred[0, t, char_indices[char]] = 1.
 
-        preds = model.predict(x_pred, verbose=0)
-        next_index = sample(preds[0, -1], diversity)
-        next_char = indices_char[next_index]
+            preds = model.predict(x_pred, verbose=0)
+            next_index = sample(preds[0, -1], diversity)
+            next_char = indices_char[next_index]
 
-        seed = seed[1:] + next_char
+            seed = seed[1:] + next_char
 
-        response_text = response_text + next_char
-        bar.progress(i/response_length)
+            response_text = response_text + next_char
+            i = i + 1
+            print("i:", i)
+
 
 st.write(response_text)
