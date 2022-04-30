@@ -24,7 +24,7 @@ data_raw = pd.read_csv("data/philosophy_data_2.csv")
 data_raw = data_raw.drop(['sentence_spacy', 'original_publication_date', 'corpus_edition_date', 'sentence_length', 'sentence_lowered', 'lemmatized_str'], axis=1)
 philosophers = list(dict.fromkeys(data_raw['author'].tolist()))
 
-loading_messages = ["Reviving the dead...", "Cloning Evan Trabitz...", "Disappointing Ulrich...", "Sequencing Genomes...", "Summoning Minions...", "Gaslighting our way into the group...", "Finding the way...", "Travelling to Denmark...", "Fighting the queen...", "Crashing the bus...", "Not bringing the wand to London...", "Making 9 BILLION QUID...", "Seeing the whites of their eyes...", "Visiting Silicon Roundabout...", "Writing the blog post...", "Running away from tibetan monks...", "Squeening Bjorn...", "Killing and dethroning God...", "Turning on supercomputers...", "Sending Grace to Switzerland...", "Using the bathroom at Tivoli...", "Being mad bro...", "Rickrolling Evan...", "Pretending Ulrich has a wife...", "Getting out of here...", "Getting ripped to shreds by Ulrich's wife...", "Jeg bor i Lyngby...", "Bringing Tuborg to class...", "5 Tuborgs in...", "Approaching boombox guy...", "Not buying overpriced coffee at Brickaccino", "Bjorn breaking his leg in Lego House...", "Evan undergoing meiosis...", "Crimping quid...", "Searching for mini-keg...", "Trying to understand spoken British...", "Red Bull Red Bull Red Bull...", "MARCH 24TH WATER BOTTLE INCIDENT", "Writing fanfictions about Evan...", "Not scheduling field studies...", "Getting drunk before 8am class...", "Getting ourselves to Roskilde...", "Studying WiNd EnErGy...", "Volunteer firefighting..."]
+loading_messages = ["Reviving the dead...", "Cloning Evan Trabitz...", "Disappointing Ulrich...", "Sequencing Genomes...", "Summoning Minions...", "Gaslighting our way into the group...", "Finding the way...", "Travelling to Denmark...", "Fighting the queen...", "Crashing the bus...", "Not bringing the wand to London...", "Making 9 BILLION QUID...", "Seeing the whites of their eyes...", "Visiting Silicon Roundabout...", "Writing the blog post...", "Running away from tibetan monks...", "Squeening Bjorn...", "Killing and dethroning God...", "Turning on supercomputers...", "Sending Grace to Switzerland...", "Using the bathroom at Tivoli...", "Being mad bro...", "Rickrolling Evan...", "Pretending Ulrich has a wife...", "Getting out of here...", "Getting ripped to shreds by Ulrich's wife...", "Jeg bor i Lyngby...", "Bringing Tuborg to class...", "5 Tuborgs in...", "Approaching boombox guy...", "Not buying overpriced coffee at Brickaccino...", "Bjorn breaking his leg in Lego House...", "Evan undergoing meiosis...", "Crimping quid...", "Searching for mini-keg...", "Trying to understand spoken British...", "Red Bull Red Bull Red Bull...", "MARCH 24TH WATER BOTTLE INCIDENT", "Writing fanfictions about Evan...", "Not scheduling field studies...", "Getting drunk before 8am class...", "Getting ourselves to Roskilde...", "Studying WiNd EnErGy...", "Volunteer firefighting...", "Bricking up...", "Falling down stairs at an FCK game..."]
 
 # Constants
 if developer:
@@ -43,7 +43,7 @@ def generate_text(philosopher_name, seed, debug):
     selected_data = data_raw.loc[data_raw['author'] == philosopher_name]
     text = ' '.join(selected_data['sentence_str'].tolist())
 
-    model_loc = "./models5/" + philosopher_name + "v5"
+    model_loc = "./models6/" + philosopher_name + "v5"
     model = keras.models.load_model(model_loc)
 
     if debug:
@@ -51,10 +51,11 @@ def generate_text(philosopher_name, seed, debug):
         st.write("Prompt: ", seed)
 
     while len(seed) < seqlen:
-        seed = seed + " "
+        pretext = ""
+        for i in range(seqlen-len(seed)):
+            pretext = pretext + " "
+        seed = pretext + seed
 
-    #seqlen = 40
-    #seed = seed[:seqlen]
     seed = seed[len(seed)-seqlen:]
     print("Seed is: ", seed)
 
@@ -130,7 +131,7 @@ def findFirstLetter(string):
 
     return 0
 
-option_2 = st.slider('How many dialogs should we generate?', 1, 10, 1)
+option_2 = st.slider('How many dialogs should we generate?', 1, 5, 1)
 option_3 = st.selectbox('Select Philosopher 1', philosophers)
 option_4 = st.selectbox('Select Philosopher 2', philosophers)
 
@@ -143,3 +144,4 @@ if st.button('Generate!'):
         conversation_seed = generate_text(option_4, conversation_seed, developer)
 
     st.balloons()
+    st.header("Tusinde Tak")
