@@ -26,13 +26,6 @@ philosophers = list(dict.fromkeys(data_raw['author'].tolist()))
 
 loading_messages = ["Reviving the dead...", "Cloning Evan Trabitz...", "Disappointing Ulrich...", "Sequencing Genomes...", "Summoning Minions...", "Gaslighting our way into the group...", "Finding the way...", "Travelling to Denmark...", "Fighting the queen...", "Crashing the bus...", "Not bringing the wand to London...", "Making 9 BILLION QUID...", "Seeing the whites of their eyes...", "Visiting Silicon Roundabout...", "Writing the blog post...", "Running away from tibet monks..."]
 
-#option = st.selectbox('Select a Philosopher', philosophers)
-
-#selected_data = data_raw.loc[data_raw['author'] == option]
-#text = ' '.join(selected_data['sentence_str'].tolist())
-
-#st.dataframe(selected_data)
-
 # Constants
 if developer:
     seqlen = st.number_input('seqlen', value=100)
