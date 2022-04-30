@@ -1,3 +1,4 @@
 
 .DS_Store
 data/philosophy_data.csv
+.streamlit/secrets.toml
