@@ -37,13 +37,14 @@ def generate_text(philosopher_name, seed, debug):
         seed = seed + " "
 
     seqlen = 40
-    seed = seed[:seqlen]
+    #seed = seed[:seqlen]
+    seed = seed[len(seed)-seqlen:]
     print("Seed is: ", seed)
 
     if debug:
         st.write("Seed: ", seed)
 
-    diversity = 0.5
+    diversity = 0.2
     chars = sorted(list(set(text)))
     char_indices = dict((c, i) for i, c in enumerate(chars))
     indices_char = dict((i, c) for i, c in enumerate(chars))
@@ -76,6 +77,9 @@ def generate_text(philosopher_name, seed, debug):
                 response_text = response_text + next_char
                 i = i + 1
 
+    if debug:
+        st.write("LSTM: ", response_text)
+
     openai.api_key = os.getenv("OPENAI_API_KEY")
 
     response = openai.Completion.create(
@@ -88,10 +92,13 @@ def generate_text(philosopher_name, seed, debug):
         presence_penalty=0
         )
 
-    repsonse_text = response["choices"][0]["text"]
-    firstLetter = findFirstLetter(repsonse_text)
-    repsonse_text = repsonse_text[firstLetter:]
-    st.write(philosopher_name, ": ", repsonse_text)
+    response_text = response["choices"][0]["text"]
+    firstLetter = findFirstLetter(response_text)
+    response_text = response_text[firstLetter:]
+    if debug:
+        st.write("GPT3: ", response_text)
+    else:
+        st.write(philosopher_name, ": ", response_text)
 
     return response_text
 
@@ -116,7 +123,7 @@ option_2 = st.slider('How many dialogs should we generate?', 1, 10, 1)
 option_3 = st.selectbox('Select Philosopher 1', philosophers)
 option_4 = st.selectbox('Select Philosopher 2', philosophers)
 
-conversation_seed = st.text_input("Prompt", "The meaning of life is")
+conversation_seed = st.text_input("Prompt", "The soul is")
 
 debug = st.checkbox('Debug Mode')
 
@@ -124,3 +131,5 @@ if st.button('Generate!'):
     for i in range(option_2):
         conversation_seed = generate_text(option_3, conversation_seed, debug)
         conversation_seed = generate_text(option_4, conversation_seed, debug)
+
+    st.balloons()
