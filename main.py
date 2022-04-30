@@ -7,6 +7,11 @@ from tensorflow import keras
 import os
 import openai
 
+st.set_page_config(
+     page_title="Drunk Philosophers",
+     page_icon="🍺",
+ )
+
 st.title("Drunk Philosophers")
 
 st.image("./SchoolOfAthens.jpeg", caption="Sober Philosophers Gathered in Athens")
