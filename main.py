@@ -9,6 +9,7 @@ import openai
 
 st.title("Drunk Philosophers")
 
+st.image("./SchoolOfAthens.jpeg", caption="Sober Philosophers Gathered in Athens")
 data_raw = pd.read_csv("data/philosophy_data.csv")
 data_raw = data_raw.drop(['sentence_spacy', 'original_publication_date', 'corpus_edition_date', 'sentence_length', 'sentence_lowered', 'lemmatized_str'], axis=1)
 philosophers = list(dict.fromkeys(data_raw['author'].tolist()))
@@ -88,9 +89,25 @@ def generate_text(philosopher_name, seed, debug):
         )
 
     repsonse_text = response["choices"][0]["text"]
+    firstLetter = findFirstLetter(repsonse_text)
+    repsonse_text = repsonse_text[firstLetter:]
     st.write(philosopher_name, ": ", repsonse_text)
 
     return response_text
+
+def findFirstLetter(string):
+    i = 0
+    letters = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z","a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z"]
+    for char in string:
+        if char in letters:
+            return i
+
+        i = i + 1
+
+    return 0
+
+def summonSatan():
+    st.write("")
 
 st.header("Conversation")
 
