@@ -20,7 +20,7 @@ st.image("./SchoolOfAthens.jpeg", caption="Sober Philosophers Gathered in Athens
 
 developer = st.checkbox('Developer Mode')
 
-data_raw = pd.read_csv("data/philosophy_data.csv")
+data_raw = pd.read_csv("data/philosophy_data_2.csv")
 data_raw = data_raw.drop(['sentence_spacy', 'original_publication_date', 'corpus_edition_date', 'sentence_length', 'sentence_lowered', 'lemmatized_str'], axis=1)
 philosophers = list(dict.fromkeys(data_raw['author'].tolist()))
 
