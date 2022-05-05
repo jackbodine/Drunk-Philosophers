@@ -1,30 +1,44 @@
-from urllib import response
 import pandas as pd
 import streamlit as st
-import tensorflow as tf
+import tensorflow
 import numpy as np
 from tensorflow import keras
 import os
 import openai
-import time
 import random
 
+# Streamlit Page Config
 st.set_page_config(
      page_title="Drunk Philosophers",
      page_icon="🍺",
  )
 
 st.title("Drunk Philosophers")
-
 st.image("./SchoolOfAthens.jpeg", caption="Sober Philosophers Gathered in Athens")
 
-developer = st.checkbox('Developer Mode')
+developer = st.checkbox('Developer Mode')   # dev mode toggle
 
+# Data prep
 data_raw = pd.read_csv("data/philosophy_data.csv")
-data_raw = data_raw.drop(['sentence_spacy', 'original_publication_date', 'corpus_edition_date', 'sentence_length', 'sentence_lowered', 'lemmatized_str'], axis=1)
+data_raw = data_raw.drop(
+    ['sentence_spacy', 'original_publication_date', 'corpus_edition_date', 'sentence_length', 'sentence_lowered', 'lemmatized_str'], 
+    axis=1
+)
 philosophers = list(dict.fromkeys(data_raw['author'].tolist()))
 
-loading_messages = ["Reviving the dead...", "Cloning Evan Trabitz...", "Disappointing Ulrich...", "Sequencing Genomes...", "Gaslighting our way into the group...", "Finding the way...", "Travelling to Denmark...", "Fighting the queen...", "Crashing the bus...", "Not bringing the wand to London...", "Making 9 BILLION QUID...", "Seeing the whites of their eyes...", "Visiting Silicon Roundabout...", "Writing the blog post...", "Running away from tibetan monks...", "Squeening Bjorn...", "Killing and dethroning God...", "Turning on supercomputers...", "Sending Grace to Switzerland...", "Using the bathroom at Tivoli...", "Being mad bro...", "Rickrolling Evan...", "Pretending Ulrich has a wife...", "Getting out of here...", "Jeg bor i Lyngby...", "Bringing Tuborg to class...", "5 Tuborgs in...", "Approaching boombox guy...", "Not buying overpriced coffee at Brickaccino...", "Bjorn breaking his leg in Lego House...", "Evan undergoing meiosis...", "Crimping quid...", "Searching for mini-keg...", "Trying to understand spoken British...", "Red Bull Red Bull Red Bull...", "MARCH 24TH WATER BOTTLE INCIDENT", "Writing fanfictions about Evan...", "Not scheduling field studies...", "Getting drunk before 8am class...", "Getting ourselves to Roskilde...", "Studying WiNd EnErGy...", "Volunteer firefighting...", "Bricking up...", "Falling down stairs at an FCK game...", "Breaking the laws of robotics...", "Falling in love with Pepper..."]
+# Just some fun
+loading_messages = ["Reviving the dead...", "Cloning Evan Trabitz...", "Disappointing Ulrich...", "Sequencing Genomes...", 
+    "Gaslighting our way into the group...", "Travelling to Denmark...", "Fighting the queen...", "Crashing the bus...", 
+    "Not bringing the wand to London...", "Making 9 BILLION QUID...", "Seeing the whites of their eyes...", "Visiting Silicon Roundabout...", 
+    "Writing the blog post...", "Running away from tibetan monks...", "Squeening Bjorn...", "Turning on supercomputers...", 
+    "Sending Grace to Switzerland...", "Using the bathroom at Tivoli...", "Being mad bro...", "Rickrolling Evan...", 
+    "Pretending Ulrich has a wife...", "Getting out of here...", "Jeg bor i Lyngby...", "Bringing Tuborg to class...", 
+    "5 Tuborgs in...", "Approaching boombox guy...", "Not buying overpriced coffee at Brickaccino...", 
+    "Bjorn breaking his leg in Lego House...", "Evan undergoing meiosis...", "Crimping quid...", "Searching for mini-keg...", 
+    "Trying to understand spoken British...", "Red Bull Red Bull Red Bull...", "MARCH 24TH WATER BOTTLE INCIDENT", 
+    "Writing fanfictions about Evan...", "Not scheduling field studies...", "Getting drunk before 8am class...", 
+    "Getting ourselves to Roskilde...", "Studying WiNd EnErGy...", "Volunteer firefighting...", "Bricking up...", 
+    "Falling down stairs at an FCK game...", "Breaking the laws of robotics...", "Falling in love with Pepper..."]
 
 # Constants
 if developer:
@@ -38,6 +52,7 @@ else:
     lstm_max_length = 250
     gpt3_temperature = 0.1
 
+# Generate Text Function
 def generate_text(philosopher_name, seed, debug):
 
     selected_data = data_raw.loc[data_raw['author'] == philosopher_name]
@@ -99,6 +114,7 @@ def generate_text(philosopher_name, seed, debug):
 
         openai.api_key = os.getenv("OPENAI_API_KEY")
 
+        # Calls GPT3 Completion model on LSTM output.
         response = openai.Completion.create(
             engine="text-davinci-002",
             prompt=response_text + "\n\nTl;dr",
@@ -120,9 +136,11 @@ def generate_text(philosopher_name, seed, debug):
 
     return response_text
 
+# Function to find the first alphebetical character in a string and return its location.
 def findFirstLetter(string):
     i = 0
-    letters = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z","a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z"] # Evan did this
+    letters = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z",
+    "a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z"] # Evan did this
     for char in string:
         if char in letters:
             return i
